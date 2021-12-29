@@ -3,6 +3,7 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import application.Main;
 import gui.util.Alerts;
@@ -37,12 +38,19 @@ public class MainViewController implements Initializable{
 	
 	@FXML
 	public void onMenuItemDepartamentoAction() {
-		loadView2("/gui/DepartmentList.fxml");
+		loadView("/gui/DepartmentList.fxml",
+				(DepartmentListController controller ) -> {
+					controller.
+						setDepartmentService(new DepartmentService());
+					controller.updateTableView();
+				});
+		
+		
 	}
 	
 	@FXML
 	public void onMenuItemSobreAction() {
-		loadView("/gui/Sobre.fxml");
+		loadView("/gui/Sobre.fxml", x -> {});
 	}
 	
 	@Override
@@ -51,7 +59,7 @@ public class MainViewController implements Initializable{
 		
 	}
 	
-	private synchronized void loadView (String novaTela) {
+	private synchronized <T> void  loadView (String novaTela, Consumer<T> inicializacao) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().
 					getResource(novaTela));
@@ -70,36 +78,9 @@ public class MainViewController implements Initializable{
 			
 			mainVBox.getChildren().addAll(newVBox.getChildren());
 			
-		} catch (IOException e) {
-			Alerts.showAlert("IOException", "Erro ao carregar a página"
-					, e.getMessage(), AlertType.ERROR);
-		}
-	}
-	
-	private synchronized void loadView2 (String novaTela) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().
-					getResource(novaTela));
-			VBox newVBox = loader.load();
+			T controller = loader.getController();
 			
-			Scene mainCene = Main.getMainScene();
-			
-			VBox mainVBox = (VBox) ((ScrollPane) mainCene.getRoot())
-					.getContent();
-			
-			Node mainMenu = mainVBox.getChildren().get(0);
-			
-			mainVBox.getChildren().clear();
-			
-			mainVBox.getChildren().add(mainMenu);
-			
-			mainVBox.getChildren().addAll(newVBox.getChildren());
-			
-			DepartmentListController controller = loader
-					.getController();
-			
-			controller.setDepartmentService(new DepartmentService());
-			controller.updateTableView();
+			inicializacao.accept(controller);
 			
 		} catch (IOException e) {
 			Alerts.showAlert("IOException", "Erro ao carregar a página"
