@@ -48,7 +48,8 @@ public class DepartmentListController implements Initializable{
 	@FXML
 	public void onBtNovoAction(ActionEvent event) {
 		Stage stage = Utils.palcoAtual(event);
-		criarDialogo(stage, "/gui/DepartmentForm.fxml");
+		Department depar = new Department();
+		criarDialogo(stage, "/gui/DepartmentForm.fxml", depar);
 	}
 	
 	public void setDepartmentService(DepartmentService service) {
@@ -84,12 +85,16 @@ public class DepartmentListController implements Initializable{
 
 	}
 	
-	private void criarDialogo(Stage stage, String novaTela) {
+	private void criarDialogo(Stage stage, String novaTela, Department depar) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().
 					getResource(novaTela));
 			
 			Pane pane = loader.load();
+			
+			DepartmentFormController controller = loader.getController();
+			controller.setDepartment(depar);
+			controller.updateFormData();
 			
 			Stage dialogo = new Stage();
 			dialogo.setTitle("Dados do departamento");
