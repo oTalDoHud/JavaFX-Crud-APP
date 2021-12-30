@@ -118,7 +118,9 @@ public class DepartmentListController implements Initializable, DataChangeListen
 			dialogo.initModality(Modality.WINDOW_MODAL);
 			dialogo.showAndWait();
 		} catch (IOException e) {
-			Alerts.showAlert("IOException", "Erro ao carregar a tela", e.getMessage(), AlertType.ERROR);
+			e.printStackTrace();
+			Alerts.showAlert("IOException", "Erro ao carregar a tela"
+					, e.getMessage(), AlertType.ERROR);
 		}
 	}
 

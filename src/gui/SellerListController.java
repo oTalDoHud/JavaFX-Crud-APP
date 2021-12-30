@@ -31,6 +31,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.entities.Seller;
+import model.services.DepartmentService;
 import model.services.SellerService;
 
 public class SellerListController implements Initializable, DataChangeListener {
@@ -122,7 +123,9 @@ public class SellerListController implements Initializable, DataChangeListener {
 
 			SellerFormController controller = loader.getController();
 			controller.setSeller(depar);
-			controller.setSellerService(new SellerService());
+			controller.setServices(new SellerService(), 
+					new DepartmentService());
+			controller.loadAssociatedObjects();
 			controller.entrandoNaLista(this);
 			controller.updateFormData();
 
@@ -134,6 +137,7 @@ public class SellerListController implements Initializable, DataChangeListener {
 			dialogo.initModality(Modality.WINDOW_MODAL);
 			dialogo.showAndWait();
 		} catch (IOException e) {
+			e.printStackTrace();
 			Alerts.showAlert("IOException", "Erro ao carregar a tela", 
 					e.getMessage(), AlertType.ERROR);
 		}
