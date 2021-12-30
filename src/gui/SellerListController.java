@@ -127,14 +127,15 @@ public class SellerListController implements Initializable, DataChangeListener {
 			controller.updateFormData();
 
 			Stage dialogo = new Stage();
-			dialogo.setTitle("Dados do departamento");
+			dialogo.setTitle("Dados do vendedor");
 			dialogo.setScene(new Scene(pane));
 			dialogo.setResizable(false);
 			dialogo.initOwner(stage);
 			dialogo.initModality(Modality.WINDOW_MODAL);
 			dialogo.showAndWait();
 		} catch (IOException e) {
-			Alerts.showAlert("IOException", "Erro ao carregar a tela", e.getMessage(), AlertType.ERROR);
+			Alerts.showAlert("IOException", "Erro ao carregar a tela", 
+					e.getMessage(), AlertType.ERROR);
 		}
 	}
 
@@ -144,8 +145,11 @@ public class SellerListController implements Initializable, DataChangeListener {
 	}
 
 	private void initEditButtons() {
-		tableColumnEdit.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		tableColumnEdit.setCellFactory(param -> new TableCell<Seller, Seller>() {
+		tableColumnEdit.setCellValueFactory(param -> 
+			new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnEdit.setCellFactory(param -> 
+			new TableCell<Seller, Seller>() {
+				
 			private final Button button = new Button("Editar");
 
 			@Override
@@ -156,14 +160,19 @@ public class SellerListController implements Initializable, DataChangeListener {
 					return;
 				}
 				setGraphic(button);
-				button.setOnAction(event -> criarDialogo(Utils.palcoAtual(event), "/gui/SellerForm.fxml", obj));
+				button.setOnAction(event -> criarDialogo(
+						Utils.palcoAtual(event), 
+						"/gui/SellerForm.fxml", obj));
 			}
 		});
 	}
 
 	private void initRemoveButtons() {
-		tableColumnRemove.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		tableColumnRemove.setCellFactory(param -> new TableCell<Seller, Seller>() {
+		tableColumnRemove.setCellValueFactory(param -> 
+			new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnRemove.setCellFactory(param -> 
+			new TableCell<Seller, Seller>() {
+				
 			private final Button button = new Button("Remover");
 
 			@Override
@@ -180,7 +189,9 @@ public class SellerListController implements Initializable, DataChangeListener {
 	}
 
 	private void removeEntity(Seller depar) {
-		Optional<ButtonType> result = Alerts.showConfirmation("Confirmação", "Tem certeza que quer deletar?");
+		Optional<ButtonType> result = 
+				Alerts.showConfirmation("Confirmação", 
+						"Tem certeza que quer deletar?");
 		
 		if (result.get() == ButtonType.OK) {
 			if (service == null) {
