@@ -1,8 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -17,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import model.entities.Seller;
 import model.exceptions.ValidationException;
@@ -37,8 +41,26 @@ public class SellerFormController implements Initializable{
 	private javafx.scene.control.TextField txtNome;
 	
 	@FXML
+	private javafx.scene.control.TextField txtEmail;
+	
+	@FXML
+	private DatePicker dpBirthDate;
+	
+	@FXML
+	private javafx.scene.control.TextField txtBaseSalary;
+	
+	@FXML
 	private Label labelErroNome;
 	
+	@FXML
+	private Label labelErroEmail;
+	
+	@FXML
+	private Label labelErroBirthDate;
+	
+	@FXML
+	private Label labelErroBaseSalary;
+
 	@FXML
 	private Button btSalvar;
 	
@@ -119,7 +141,10 @@ public class SellerFormController implements Initializable{
 	
 	private void initializeNodes() {
 		Constraints.setTextFieldInteger(txtId);
-		Constraints.setTextFieldMaxLength(txtNome, 30);
+		Constraints.setTextFieldMaxLength(txtNome, 70);
+		Constraints.setTextFieldDouble(txtBaseSalary);
+		Constraints.setTextFieldMaxLength(txtEmail, 70);
+		Utils.formatDatePicker(dpBirthDate, "dd/MM/yyyy");
 	}
 	
 	public void updateFormData() {
@@ -129,6 +154,15 @@ public class SellerFormController implements Initializable{
 		
 		txtId.setText(String.valueOf(entity.getId()));
 		txtNome.setText(entity.getName());
+		txtEmail.setText(entity.getEmail());
+		Locale.setDefault(Locale.US);
+		txtBaseSalary.setText(String.format("%.2f", entity.getBaseSalary()));
+		
+		if (entity.getBirthDate() != null) {
+			dpBirthDate.setValue(LocalDate.
+					ofInstant(entity.getBirthDate().toInstant(),
+							ZoneId.systemDefault()) );
+		}
 	}
 
 	private void setErrorMsg(Map<String, String> erro) {
