@@ -1,9 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -135,7 +137,34 @@ public class SellerFormController implements Initializable {
 			ex.addErro("Nome", "Nome está vazio");
 		}
 		obj.setName(txtNome.getText());
+		
+		if (txtEmail.getText() == null || txtEmail.getText().trim().equals("")) {
 
+			ex.addErro("Email", "Email está vazio");
+		}
+		obj.setEmail(txtEmail.getText());
+		
+		if (dpBirthDate.getValue() == null) {
+			ex.addErro("BirthDate", "Aniversário está vazio");
+		}
+		else {
+			Instant instante = Instant.from(dpBirthDate.getValue().
+					atStartOfDay(ZoneId.systemDefault()));
+			
+			obj.setBirthDate(Date.from(instante));
+			
+		}
+
+		if (txtBaseSalary.getText() == null 
+				|| txtBaseSalary.getText().trim().equals("")){
+
+			ex.addErro("BaseSalary", "Salário base está vazio");
+		}
+		
+		obj.setBaseSalary(Utils.tryPaseToDouble(txtBaseSalary.getText()));
+		
+		obj.setDepartment(comboBoxDepartment.getValue());
+		
 		if (ex.getErros().size() > 0) {
 			throw ex;
 		}
@@ -201,6 +230,31 @@ public class SellerFormController implements Initializable {
 		if (campos.contains("Nome")) {
 			labelErroNome.setText(erro.get("Nome"));
 		}
+		else {
+			labelErroNome.setText("");
+		}
+		
+		if (campos.contains("Email")) {
+			labelErroEmail.setText(erro.get("Email"));
+		}
+		else {
+			labelErroEmail.setText("");
+		}
+		
+		if (campos.contains("BaseSalary")) {
+			labelErroBaseSalary.setText(erro.get("BaseSalary"));
+		}
+		else {
+			labelErroBaseSalary.setText("");
+		}
+		
+		if (campos.contains("BirthDate")) {
+			labelErroBirthDate.setText(erro.get("BirthDate"));
+		}
+		else {
+			labelErroBirthDate.setText("");
+		}
+		
 	}
 
 	private void initializeComboBoxDepartment() {
